@@ -29,6 +29,7 @@ pipeline {
             steps {
                 echo "Install dependencies"
                 sh  "pip install -r requirements/dev.txt"
+                sh "mkdir reports"
             }
         }
         stage('Static Code Analysis') {
