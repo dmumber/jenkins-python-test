@@ -7,5 +7,5 @@ def func_xxx(x):
     return x + 1
 
 
-def Func_yyy(y):
+def func_yyy(y):
     return y - 1
