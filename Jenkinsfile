@@ -29,18 +29,18 @@ pipeline {
             steps {
                 echo "Install dependencies"
                 sh "pip install -r requirements/dev.txt"
-                //sh "mkdir reports"
+                sh "mkdir reports"
             }
         }
 
         stage('Static Code Analysis') {
             steps {
-                sh 'pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > pylint.out'
+                sh 'pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out'
             }
             post {
                 always{
                     recordIssues(
-                        tool: pyLint(pattern: '**/pylint.out'),
+                        tool: pyLint(pattern: 'reports/pylint.out'),
                         unstableTotalAll: 100,
                     )
                 }
@@ -49,15 +49,15 @@ pipeline {
 
         stage('Unit Testing') {
             steps {
-                sh  ''' coverage run -m pytest --verbose --junit-xml junit_tests.xml
-                        coverage xml -o test-coverage.xml
+                sh  ''' coverage run -m pytest --verbose --junit-xml reports/unit_tests.xml
+                        coverage xml -o reports/coverage.xml
                     '''
             }
             post {
                 always {
                     // Archive unit tests for the future
-                    junit allowEmptyResults: true, testResults: '**/junit_tests.xml'
-                    cobertura coberturaReportFile: '**/test-coverage.xml'
+                    junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
+                    cobertura coberturaReportFile: 'reports/coverage.xml'
                 }
             }
         }
