@@ -31,41 +31,51 @@ pipeline {
                 sh  "pip install -r requirements/dev.txt"
             }
         }
-        stage('Test: Run') {
-            steps {
-                // Run my project tests.
-                sh 'coverage run package_xxx/module_xxx.py tests'
+        stage('Static Analysis') {
+            
+            recordIssues(
+                tool: pyLint(pattern: '**/pylint.out'),
+                unstableTotalAll: '100',
+           )
     
-                // Dump coverage metrics to XML.
-                sh 'coverage xml -o reports/coverage.xml'
-    
-                // Run Pylint.
-                sh 'pylint package_xxx > reports/pylint.report || true'
-    
-                // Run Pycodestyle (PEP8 checks).
-                sh 'pycodestyle package_xxx > reports/pep8.report'
-
-                // run PyTest
-                sh 'pytest --verbose --junit-xml reports/unit_tests.xml'
-            }
-            post {
-                always{
-                    // Generate JUnit, PEP8, Pylint and Coverage reports.
-                    junit 'reports/unit_tests.xml'
-                    recordIssues(
-                        tool: pep8(pattern: 'reports/pep8.report'),
-                        unstableTotalAll: 200,
-                        failedTotalAll: 220
-                    )
-                    recordIssues(
-                        tool: pyLint(pattern: 'reports/pylint.report'),
-                        unstableTotalAll: 20,
-                        failedTotalAll: 30
-                    )
-                    cobertura coberturaReportFile: 'reports/coverage.xml'
-                }
-            }
+            recordIssues(
+                tool: pep8(pattern: '**/pep8.out'),
+                unstableTotalAll: '100',
+           )
         }
+
+        //stage('Static code metrics') {
+        //    steps {
+        //        echo "Test coverage"
+        //        sh ''' coverage run package_xxx/module_xxx.py tests
+        //               coverage xml -o reports/coverage.xml'
+        //           '''
+    //
+        //        echo "Style check"
+        //        sh ''' pylint package_xxx > reports/pylint.report || true
+        //               pycodestyle package_xxx > reports/pep8.report'
+        //           '''
+//
+        //        // run PyTest
+        //        sh 'pytest --verbose --junit-xml reports/unit_tests.xml'
+        //    }
+        //    post {
+        //        always{
+        //            // Generate PEP8, Pylint and Coverage reports.
+        //            recordIssues(
+        //                tool: pep8(pattern: 'reports/pep8.report'),
+        //                unstableTotalAll: 200,
+        //                failedTotalAll: 220
+        //            )
+        //            recordIssues(
+        //                tool: pyLint(pattern: 'reports/pylint.report'),
+        //                unstableTotalAll: 20,
+        //                failedTotalAll: 30
+        //            )
+        //            cobertura coberturaReportFile: 'reports/coverage.xml'
+        //        }
+        //    }
+        //}
         //stage('Static code metrics') {
         //    steps {
         //        //echo "Raw metrics"
@@ -106,18 +116,18 @@ pipeline {
 
 
 
-        //stage('Unit tests') {
-        //    steps {
-        //        sh  ''' python -m pytest --verbose --junit-xml reports/unit_tests.xml
-        //            '''
-        //    }
-        //    post {
-        //        always {
-        //            // Archive unit tests for the future
-        //            junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
-        //        }
-        //    }
-        //}
+        stage('Unit tests') {
+            steps {
+                sh  ''' python -m pytest --verbose --junit-xml reports/unit_tests.xml
+                    '''
+            }
+            post {
+                always {
+                    // Archive unit tests for the future
+                    junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
+                }
+            }
+        }
 
         //stage('Acceptance tests') {
         //    steps {
