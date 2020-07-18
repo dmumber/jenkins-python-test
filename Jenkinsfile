@@ -31,20 +31,20 @@ pipeline {
                 sh  "pip install -r requirements/dev.txt"
             }
         }
-        stage('Static Analysis') {
+        stage('Static Code Analysis') {
             steps {
-                echo "Style check"
+                echo "PyLint"
                 sh ''' pylint package_xxx > reports/pylint.report || true
-                       pycodestyle package_xxx > reports/pep8.report'
+                       pycodestyle package_xxx > reports/pep8.report
                    '''
                 recordIssues(
                     tool: pyLint(pattern: '**/pylint.out'),
                     unstableTotalAll: 100,
                 )
 
-                echo "Style check"
+                echo "PEP8"
                 sh ''' pylint package_xxx > reports/pylint.report || true
-                       pycodestyle package_xxx > reports/pep8.report'
+                       pycodestyle package_xxx > reports/pep8.report
                    '''
                 recordIssues(
                     tool: pep8(pattern: '**/pep8.out'),
