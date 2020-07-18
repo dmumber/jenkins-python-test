@@ -33,11 +33,19 @@ pipeline {
         }
         stage('Static Analysis') {
             steps {
+                echo "Style check"
+                sh ''' pylint package_xxx > reports/pylint.report || true
+                       pycodestyle package_xxx > reports/pep8.report'
+                   '''
                 recordIssues(
                     tool: pyLint(pattern: '**/pylint.out'),
                     unstableTotalAll: 100,
                 )
-    
+
+                echo "Style check"
+                sh ''' pylint package_xxx > reports/pylint.report || true
+                       pycodestyle package_xxx > reports/pep8.report'
+                   '''
                 recordIssues(
                     tool: pep8(pattern: '**/pep8.out'),
                     unstableTotalAll: 100,
@@ -45,7 +53,7 @@ pipeline {
             }
         }
 
-        //stage('Static code metrics') {
+        //stage('Static Analysis') {
         //    steps {
         //        echo "Test coverage"
         //        sh ''' coverage run package_xxx/module_xxx.py tests
