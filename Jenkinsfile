@@ -46,7 +46,7 @@ pipeline {
                 sh 'pycodestyle package_xxx > reports/pep8.report'
 
                 // run PyTest
-                python -m pytest --verbose --junit-xml reports/unit_tests.xml
+                sh 'pytest --verbose --junit-xml reports/unit_tests.xml'
             }
             post {
                 always{
@@ -106,18 +106,18 @@ pipeline {
 
 
 
-        stage('Unit tests') {
-            steps {
-                sh  ''' python -m pytest --verbose --junit-xml reports/unit_tests.xml
-                    '''
-            }
-            post {
-                always {
-                    // Archive unit tests for the future
-                    junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
-                }
-            }
-        }
+        //stage('Unit tests') {
+        //    steps {
+        //        sh  ''' python -m pytest --verbose --junit-xml reports/unit_tests.xml
+        //            '''
+        //    }
+        //    post {
+        //        always {
+        //            // Archive unit tests for the future
+        //            junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
+        //        }
+        //    }
+        //}
 
         //stage('Acceptance tests') {
         //    steps {
