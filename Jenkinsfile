@@ -58,7 +58,7 @@ pipeline {
                 always {
                     // Archive unit tests for the future
                     junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
-                    cobertura coberturaReportFile: 'reports/coverage.xml'
+                    cobertura coberturaReportFile: 'reports/coverage.xml', enableNewApi: true, lineCoverageTargets: '80, 60, 70'
                 }
             }
         }
