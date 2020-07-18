@@ -5,3 +5,7 @@
 
 def func_xxx(x):
     return x + 1
+
+
+def func_yyy(y):
+    return y - 1
