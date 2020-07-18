@@ -35,18 +35,12 @@ pipeline {
 
         stage('Static Code Analysis') {
             steps {
-                sh 'pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol} ({msg_id})), {obj}] {msg}" package_xxx > reports/pylint.report'
-                //sh "cat reports/pylint.report"
-                //sh "pycodestyle package_xxx > reports/pep8.report  || true"
+                sh 'pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > pylint.out'
             }
             post {
                 always{
                     recordIssues(
-                        tool: pyLint(pattern: 'reports/pylint.report'),
-                        unstableTotalAll: 100,
-                    )
-                    recordIssues(
-                        tool: pep8(pattern: 'reports/pep8.report'),
+                        tool: pyLint(pattern: '**/pylint.out'),
                         unstableTotalAll: 100,
                     )
                 }
