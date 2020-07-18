@@ -34,7 +34,7 @@ pipeline {
         stage('Test: Run') {
             steps {
                 // Run my project tests.
-                sh 'coverage run package_xxx/module_xxx.py tests'
+                sh 'coverage run package_xxx/module_xxx.py'
     
                 // Dump coverage metrics to XML.
                 sh 'coverage xml -o reports/coverage.xml'
