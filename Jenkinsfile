@@ -13,7 +13,10 @@ pipeline {
     options {
         //skipDefaultCheckout(true)
         // Keep the 10 most recent builds
-        buildDiscarder(logRotator(numToKeepStr: '10'))
+        buildDiscarder(
+            logRotator(numToKeepStr: '10')
+        )
+        
         timestamps()
     }
 
@@ -39,7 +42,14 @@ pipeline {
             }
             post {
                 always{
-                    recordIssues aggregatingResults: true, enabledForFailure: true, tools: [pyLint(pattern: 'reports/pylint.out')], unstableTotalAll: 100
+                    recordIssues(
+                        aggregatingResults: true,
+                        enabledForFailure: true,
+                        tools: [
+                            pyLint(pattern: 'reports/pylint.out')
+                        ],
+                        unstableTotalAll: 100
+                    )
                     //recordIssues(
                     //    tool: pyLint(pattern: 'reports/pylint.out'),
                     //    unstableTotalAll: 100,
@@ -58,8 +68,21 @@ pipeline {
             post {
                 always {
                     // Archive unit tests for the future
-                    junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
-                    cobertura coberturaReportFile: 'reports/coverage.xml', sourceEncoding: 'ASCII', enableNewApi: true, failNoReports: false, failUnstable: false, conditionalCoverageTargets: '80, 60, 70', methodCoverageTargets: '80, 60, 70', packageCoverageTargets: '80, 60, 70'
+                    junit(
+                        allowEmptyResults: true,
+                        testResults: 'reports/unit_tests.xml'
+                    )
+
+                    cobertura(
+                        coberturaReportFile: 'reports/coverage.xml',
+                        sourceEncoding: 'ASCII',
+                        enableNewApi: true,
+                        failNoReports: false,
+                        failUnstable: false,
+                        conditionalCoverageTargets: '80, 60, 70',
+                        methodCoverageTargets: '80, 60, 70',
+                        packageCoverageTargets: '80, 60, 70'
+                    )
                 }
             }
         }
@@ -76,7 +99,11 @@ pipeline {
             post {
                 always {
                     // Archive unit tests for the future
-                    archiveArtifacts allowEmptyArchive: true, artifacts: 'dist/*whl', fingerprint: true
+                    archiveArtifacts(
+                        allowEmptyArchive: true,
+                        artifacts: 'dist/*whl',
+                        fingerprint: true
+                    )
                 }
             }
         }
