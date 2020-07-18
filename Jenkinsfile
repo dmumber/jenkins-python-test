@@ -37,6 +37,7 @@ pipeline {
                 sh "pylint package_xxx > reports/pylint.report || true"
                 sh "pycodestyle package_xxx > reports/pep8.report"
                 sh ''' coverage run package_xxx/module_xxx.py tests
+                       coverage run -m pytest tests
                        coverage xml -o reports/coverage.xml
                    '''
             }
