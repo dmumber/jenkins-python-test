@@ -36,8 +36,7 @@ pipeline {
             steps {
                 sh "pylint package_xxx > reports/pylint.report || true"
                 sh "pycodestyle package_xxx > reports/pep8.report  || true"
-                sh ''' coverage run package_xxx
-                       coverage run -m pytest tests
+                sh ''' coverage run package_xxx tests
                        coverage xml -o reports/coverage.xml
                    '''
             }
