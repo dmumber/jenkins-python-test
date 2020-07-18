@@ -50,7 +50,7 @@ pipeline {
         stage('Unit Testing') {
             steps {
                 //coverage run -m pytest --verbose --junit-xml reports/unit_tests.xml
-                sh  ''' pytest --cov=. --verbose --junit-xml reports/unit_tests.xml
+                sh  ''' pytest --cov=package_xxx --verbose --junit-xml reports/unit_tests.xml
                         coverage xml -o reports/coverage.xml
                     '''
             }
