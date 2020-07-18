@@ -9,35 +9,36 @@
 from setuptools import setup, find_packages
 
 
-requirements = [
-	'scipy', 'numpy', 'scikit-learn', 'Click'
-]
-
-test_requirements=[
-	'behave'
-]
+#requirements = [
+#	'scipy', 'numpy', 'scikit-learn', 'Click'
+#]
+#
+#test_requirements=[
+#	'behave'
+#]
 
 setup(
-	name='irisvmpy',
+	name='package_xxx',
 	version='0.0.1',
-	description='SVM classifier for iris data-set',
-	author='Michal Dyzma',
-	author_email='mdyzma@gmail.com',
-    url ='https://github.com/mdyzma/jenkins-python-test',
-    download_url='https://github.com/mdyzma/jenkins-python-test/archive/0.0.1.tar.gz',
-	license='MIT',
-	packages=find_packages(),
-	install_requires=requirements,
-	entry_points={
-    	'console_scripts': [
-        		'irisvmpy = irisvmpy.iris:cli',
-        	],
-        },
-	classifiers=[
-        'Development Status :: 1 - Alpha',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.6',
-      ],
+	#description='SVM classifier for iris data-set',
+	#author='Michal Dyzma',
+	#author_email='mdyzma@gmail.com',
+    #url ='https://github.com/mdyzma/jenkins-python-test',
+    #download_url='https://github.com/mdyzma/jenkins-python-test/archive/0.0.1.tar.gz',
+	#license='MIT',
+	#packages=find_packages(),
+	packages=["package_xxx", "module_xxx"],
+	#install_requires=requirements,
+	#entry_points={
+    #	'console_scripts': [
+    #    		'irisvmpy = irisvmpy.iris:cli',
+    #    	],
+    #    },
+	#classifiers=[
+    #    'Development Status :: 1 - Alpha',
+    #    'License :: OSI Approved :: MIT License',
+    #    'Programming Language :: Python :: 2.7',
+    #    'Programming Language :: Python :: 3.6',
+    #  ],
 	zip_safe=False
 )

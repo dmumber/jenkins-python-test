@@ -51,8 +51,8 @@ pipeline {
             post{
                 always{
                     step([$class: 'CoberturaPublisher',
-                                   autoUpdateHealth: false,
-                                   autoUpdateStability: false,
+                                   autoUpdateHealth: true,
+                                   autoUpdateStability: true,
                                    coberturaReportFile: 'reports/coverage.xml',
                                    failNoReports: false,
                                    failUnhealthy: false,
@@ -60,7 +60,7 @@ pipeline {
                                    maxNumberOfBuilds: 10,
                                    onlyStable: false,
                                    sourceEncoding: 'ASCII',
-                                   zoomCoverageChart: false])
+                                   zoomCoverageChart: true])
                 }
             }
         }
@@ -80,21 +80,21 @@ pipeline {
             }
         }
 
-        stage('Acceptance tests') {
-            steps {
-                sh  ''' behave -f=formatters.cucumber_json:PrettyCucumberJSONFormatter -o ./reports/acceptance.json || true
-                    '''
-            }
-            post {
-                always {
-                    cucumber (buildStatus: 'SUCCESS',
-                    fileIncludePattern: '**/*.json',
-                    jsonReportDirectory: './reports/',
-                    parallelTesting: true,
-                    sortingMethod: 'ALPHABETICAL')
-                }
-            }
-        }
+        //stage('Acceptance tests') {
+        //    steps {
+        //        sh  ''' behave -f=formatters.cucumber_json:PrettyCucumberJSONFormatter -o ./reports/acceptance.json || true
+        //            '''
+        //    }
+        //    post {
+        //        always {
+        //            cucumber (buildStatus: 'SUCCESS',
+        //            fileIncludePattern: '**/*.json',
+        //            jsonReportDirectory: './reports/',
+        //            parallelTesting: true,
+        //            sortingMethod: 'ALPHABETICAL')
+        //        }
+        //    }
+        //}
 
         stage('Build package') {
             when {
