@@ -41,11 +41,11 @@ pipeline {
                 //        sloccount --duplicates --wide irisvmpy > sloccount.sc
                 //    '''
                 echo "Test coverage"
-                sh  ''' coverage run irisvmpy/iris.py 1 1 2 3
+                sh  ''' coverage run package_xxx/module_xxx.py 1 1 2 3
                         python -m coverage xml -o reports/coverage.xml
                     '''
                 echo "Style check"
-                sh  ''' pylint irisvmpy || true
+                sh  ''' pylint package_xxx || true
                     '''
             }
             post{
