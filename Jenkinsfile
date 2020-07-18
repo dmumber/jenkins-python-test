@@ -1,8 +1,13 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            label 'terra'
+            image 'python:3.7'
+        }
+    }
 
     triggers {
-        pollSCM('*/5 * * * 1-5')
+        pollSCM('*/15 * * * *')
     }
 
     options {
