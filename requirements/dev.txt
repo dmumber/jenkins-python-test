@@ -3,7 +3,7 @@
 # Static code metrics
 # pyflakes==1.6.0
 # Flake8==3.5.0
-#pylint==1.8.1
+pylint
 #Radon==2.1.1
 coverage
 
