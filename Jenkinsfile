@@ -25,21 +25,22 @@ pipeline {
         //    }
         //}
 
-        stage('Prepare environment') {
+        stage('Setup Build Environment') {
             steps {
                 echo "Install dependencies"
                 sh  "pip install -r requirements/dev.txt"
                 sh "mkdir reports"
             }
         }
+
         stage('Static Code Analysis') {
             steps {
                 sh "pylint package_xxx > reports/pylint.report || true"
                 sh "pycodestyle package_xxx > reports/pep8.report  || true"
-                sh ''' coverage run package_xxx/module_xxx.py tests
-                       coverage run -m pytest tests
-                       coverage xml -o reports/coverage.xml
-                   '''
+                //sh ''' 
+                //       coverage run -m pytest tests
+                //       coverage xml -o reports/coverage.xml
+                //   '''
             }
             post {
                 always{
@@ -51,92 +52,22 @@ pipeline {
                         tool: pep8(pattern: 'reports/pep8.report'),
                         unstableTotalAll: 100,
                     )
-                    cobertura coberturaReportFile: 'reports/coverage.xml'
+                    //cobertura coberturaReportFile: 'reports/coverage.xml'
                 }
             }
         }
 
-        //stage('Static Analysis') {
-        //    steps {
-        //        echo "Test coverage"
-        //        sh ''' coverage run package_xxx/module_xxx.py tests
-        //               coverage xml -o reports/coverage.xml'
-        //           '''
-    //
-        //        echo "Style check"
-        //        sh ''' pylint package_xxx > reports/pylint.report || true
-        //               pycodestyle package_xxx > reports/pep8.report'
-        //           '''
-//
-        //        // run PyTest
-        //        sh 'pytest --verbose --junit-xml reports/unit_tests.xml'
-        //    }
-        //    post {
-        //        always{
-        //            // Generate PEP8, Pylint and Coverage reports.
-        //            recordIssues(
-        //                tool: pep8(pattern: 'reports/pep8.report'),
-        //                unstableTotalAll: 200,
-        //                failedTotalAll: 220
-        //            )
-        //            recordIssues(
-        //                tool: pyLint(pattern: 'reports/pylint.report'),
-        //                unstableTotalAll: 20,
-        //                failedTotalAll: 30
-        //            )
-        //            cobertura coberturaReportFile: 'reports/coverage.xml'
-        //        }
-        //    }
-        //}
-        //stage('Static code metrics') {
-        //    steps {
-        //        //echo "Raw metrics"
-        //        //sh  ''' radon raw --json irisvmpy > raw_report.json
-        //        //        radon cc --json irisvmpy > cc_report.json
-        //        //        radon mi --json irisvmpy > mi_report.json
-        //        //        sloccount --duplicates --wide irisvmpy > sloccount.sc
-        //        //    '''
-        //        echo "Test coverage"
-        //        sh  ''' coverage run package_xxx/module_xxx.py 1 1 2 3
-        //                python -m coverage xml -o reports/coverage.xml
-        //            '''
-        //        echo "Style check"
-        //        //sh  ''' pylint package_xxx || true
-        //        sh  ''' 
-        //                pylint --disable=W1202 --output-format=parseable --reports=no module > pylint.log || echo "pylint exited with $?")'
-        //                cat render/pylint.log
-        //            '''
-        //    }
-        //    post{
-        //        always{
-        //            step([$class: 'CoberturaPublisher',
-        //                           autoUpdateHealth: true,
-        //                           autoUpdateStability: true,
-        //                           coberturaReportFile: 'reports/coverage.xml',
-        //                           failNoReports: false,
-        //                           failUnhealthy: false,
-        //                           failUnstable: false,
-        //                           maxNumberOfBuilds: 10,
-        //                           onlyStable: false,
-        //                           sourceEncoding: 'ASCII',
-        //                           zoomCoverageChart: true]
-        //            )
-        //            step([$class: 'WarningsPublisher', parserConfigurations: [[parserName: 'PYLint', pattern: 'pylint.log']], unstableTotalAll: '0', usePreviousBuildAsReference: true])
-        //        }
-        //    }
-        //}
-
-
-
-        stage('Unit tests') {
+        stage('Unit Testing') {
             steps {
                 sh  ''' coverage run -m pytest --verbose --junit-xml reports/unit_tests.xml
+                        coverage xml -o reports/coverage.xml
                     '''
             }
             post {
                 always {
                     // Archive unit tests for the future
                     junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
+                    cobertura coberturaReportFile: 'reports/coverage.xml'
                 }
             }
         }
@@ -157,7 +88,7 @@ pipeline {
         //    }
         //}
 
-        stage('Build package') {
+        stage('Build Package') {
             when {
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
