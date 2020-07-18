@@ -29,7 +29,7 @@ pipeline {
             steps {
                 echo "Install dependencies"
                 sh "pip install -r requirements/dev.txt"
-                sh "mkdir reports"
+                //sh "mkdir reports"
             }
         }
 
@@ -49,15 +49,15 @@ pipeline {
 
         stage('Unit Testing') {
             steps {
-                sh  ''' coverage run -m pytest --verbose --junit-xml reports/unit_tests.xml
-                        coverage xml -o reports/coverage.xml
+                sh  ''' coverage run -m pytest --verbose --junit-xml junit_tests.xml
+                        coverage xml -o test-coverage.xml
                     '''
             }
             post {
                 always {
                     // Archive unit tests for the future
-                    junit allowEmptyResults: true, testResults: 'reports/unit_tests.xml'
-                    cobertura coberturaReportFile: 'reports/coverage.xml'
+                    junit allowEmptyResults: true, testResults: '**/junit_tests.xml'
+                    cobertura coberturaReportFile: '**/test-coverage.xml'
                 }
             }
         }
