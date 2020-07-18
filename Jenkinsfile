@@ -40,7 +40,7 @@ pipeline {
                 sh 'coverage xml -o reports/coverage.xml'
     
                 // Run Pylint.
-                sh 'pylint package_xxx > reports/pylint.report'
+                sh 'pylint package_xxx > reports/pylint.report || true'
     
                 // Run Pycodestyle (PEP8 checks).
                 sh 'pycodestyle package_xxx > reports/pep8.report'
