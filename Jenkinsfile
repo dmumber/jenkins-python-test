@@ -35,7 +35,7 @@ pipeline {
 
         stage('Static Code Analysis') {
             steps {
-                sh 'pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({msg_id}-{symbol}), {obj}] {msg}" package_xxx > reports/pylint.report'
+                sh 'pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol} ({msg_id})), {obj}] {msg}" package_xxx > reports/pylint.report'
                 //sh "cat reports/pylint.report"
                 //sh "pycodestyle package_xxx > reports/pep8.report  || true"
             }
