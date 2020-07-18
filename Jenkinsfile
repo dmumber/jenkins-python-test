@@ -63,14 +63,13 @@ pipeline {
                                    maxNumberOfBuilds: 10,
                                    onlyStable: false,
                                    sourceEncoding: 'ASCII',
-                                   zoomCoverageChart: true]),
+                                   zoomCoverageChart: true]
+                    )
                     step([$class: 'WarningsPublisher',
-                                   parserConfigurations: [[
-                                       parserName: 'PYLint',
-                                       pattern: 'pylint.log'
-                                   ]],
+                                   parserConfigurations: [[parserName: 'PYLint', pattern: 'pylint.log']],
                                    unstableTotalAll: '0',
-                                   usePreviousBuildAsReference: true])
+                                   usePreviousBuildAsReference: true]
+                    )
                 }
             }
         }
