@@ -33,19 +33,22 @@ pipeline {
         }
         stage('Static Code Analysis') {
             steps {
-                echo "PyLint"
                 sh "pylint package_xxx > reports/pylint.report || true"
+                sh "pycodestyle package_xxx > reports/pep8.report"
+                sh ''' coverage run package_xxx/module_xxx.py tests
+                       coverage xml -o reports/coverage.xml
+                   '''
+            }
+            post {
                 recordIssues(
                     tool: pyLint(pattern: 'reports/pylint.report'),
                     unstableTotalAll: 100,
                 )
-
-                echo "PEP8"
-                sh "pycodestyle package_xxx > reports/pep8.report"
                 recordIssues(
                     tool: pep8(pattern: 'reports/pep8.report'),
                     unstableTotalAll: 100,
                 )
+                cobertura coberturaReportFile: 'reports/coverage.xml'
             }
         }
 
