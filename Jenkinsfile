@@ -35,12 +35,12 @@ pipeline {
             steps {
                 recordIssues(
                     tool: pyLint(pattern: '**/pylint.out'),
-                    unstableTotalAll: '100',
+                    unstableTotalAll: 100,
                 )
     
                 recordIssues(
                     tool: pep8(pattern: '**/pep8.out'),
-                    unstableTotalAll: '100',
+                    unstableTotalAll: 100,
                 )
             }
         }
