@@ -40,10 +40,10 @@ pipeline {
                 sh 'coverage xml -o reports/coverage.xml'
     
                 // Run Pylint.
-                sh 'pylint --rcfile=.pylintrc my_project > reports/pylint.report'
+                sh 'pylint package_xxx > reports/pylint.report'
     
                 // Run Pycodestyle (PEP8 checks).
-                sh 'pycodestyle my_project > reports/pep8.report'
+                sh 'pycodestyle package_xxx > reports/pep8.report'
             }
             post {
                 always{
