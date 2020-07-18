@@ -34,20 +34,16 @@ pipeline {
         stage('Static Code Analysis') {
             steps {
                 echo "PyLint"
-                sh ''' pylint package_xxx > reports/pylint.report || true
-                       pycodestyle package_xxx > reports/pep8.report
-                   '''
+                sh "pylint package_xxx > reports/pylint.report || true"
                 recordIssues(
-                    tool: pyLint(pattern: '**/pylint.out'),
+                    tool: pyLint(pattern: 'reports/pylint.report'),
                     unstableTotalAll: 100,
                 )
 
                 echo "PEP8"
-                sh ''' pylint package_xxx > reports/pylint.report || true
-                       pycodestyle package_xxx > reports/pep8.report
-                   '''
+                sh "pycodestyle package_xxx > reports/pep8.report"
                 recordIssues(
-                    tool: pep8(pattern: '**/pep8.out'),
+                    tool: pep8(pattern: 'reports/pep8.report'),
                     unstableTotalAll: 100,
                 )
             }
