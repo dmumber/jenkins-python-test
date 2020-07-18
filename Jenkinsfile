@@ -45,7 +45,10 @@ pipeline {
                         python -m coverage xml -o reports/coverage.xml
                     '''
                 echo "Style check"
-                sh  ''' pylint package_xxx || true
+                //sh  ''' pylint package_xxx || true
+                sh  ''' 
+                        pylint --disable=W1202 --output-format=parseable --reports=no module > pylint.log || echo "pylint exited with $?")'
+                        cat render/pylint.log
                     '''
             }
             post{
@@ -60,7 +63,14 @@ pipeline {
                                    maxNumberOfBuilds: 10,
                                    onlyStable: false,
                                    sourceEncoding: 'ASCII',
-                                   zoomCoverageChart: true])
+                                   zoomCoverageChart: true]),
+                    step([$class: 'WarningsPublisher',
+                                   parserConfigurations: [[
+                                       parserName: 'PYLint',
+                                       pattern: 'pylint.log'
+                                   ]],
+                                   unstableTotalAll: '0',
+                                   usePreviousBuildAsReference: true])
                 }
             }
         }
