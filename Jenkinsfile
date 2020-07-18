@@ -34,7 +34,7 @@ pipeline {
         stage('Test: Run') {
             steps {
                 // Run my project tests.
-                sh 'coverage run package_xxx/module_xxx.py'
+                sh 'coverage run package_xxx/module_xxx.py tests'
     
                 // Dump coverage metrics to XML.
                 sh 'coverage xml -o reports/coverage.xml'
@@ -48,7 +48,7 @@ pipeline {
             post {
                 always{
                     // Generate JUnit, PEP8, Pylint and Coverage reports.
-                    junit 'reports/*junit.xml'
+                    //junit 'reports/*junit.xml'
                     recordIssues(
                         tool: pep8(pattern: 'reports/pep8.report'),
                         unstableTotalAll: 200,
