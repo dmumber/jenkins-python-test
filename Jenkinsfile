@@ -40,15 +40,17 @@ pipeline {
                    '''
             }
             post {
-                recordIssues(
-                    tool: pyLint(pattern: 'reports/pylint.report'),
-                    unstableTotalAll: 100,
-                )
-                recordIssues(
-                    tool: pep8(pattern: 'reports/pep8.report'),
-                    unstableTotalAll: 100,
-                )
-                cobertura coberturaReportFile: 'reports/coverage.xml'
+                always{
+                    recordIssues(
+                        tool: pyLint(pattern: 'reports/pylint.report'),
+                        unstableTotalAll: 100,
+                    )
+                    recordIssues(
+                        tool: pep8(pattern: 'reports/pep8.report'),
+                        unstableTotalAll: 100,
+                    )
+                    cobertura coberturaReportFile: 'reports/coverage.xml'
+                }
             }
         }
 
