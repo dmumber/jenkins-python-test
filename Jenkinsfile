@@ -31,48 +31,75 @@ pipeline {
                 sh  "pip install -r requirements/dev.txt"
             }
         }
-
-        stage('Static code metrics') {
+        stage('Test: Run') {
             steps {
-                //echo "Raw metrics"
-                //sh  ''' radon raw --json irisvmpy > raw_report.json
-                //        radon cc --json irisvmpy > cc_report.json
-                //        radon mi --json irisvmpy > mi_report.json
-                //        sloccount --duplicates --wide irisvmpy > sloccount.sc
-                //    '''
-                echo "Test coverage"
-                sh  ''' coverage run package_xxx/module_xxx.py 1 1 2 3
-                        python -m coverage xml -o reports/coverage.xml
-                    '''
-                echo "Style check"
-                //sh  ''' pylint package_xxx || true
-                sh  ''' 
-                        pylint --disable=W1202 --output-format=parseable --reports=no module > pylint.log || echo "pylint exited with $?")'
-                        cat render/pylint.log
-                    '''
+                // Run my project tests.
+                sh 'coverage run package_xxx tests'
+    
+                // Dump coverage metrics to XML.
+                sh 'coverage xml -o reports/coverage.xml'
+    
+                // Run Pylint.
+                sh 'pylint --rcfile=.pylintrc my_project > reports/pylint.report'
+    
+                // Run Pycodestyle (PEP8 checks).
+                sh 'pycodestyle my_project > reports/pep8.report'
             }
-            post{
+            post {
                 always{
-                    step([$class: 'CoberturaPublisher',
-                                   autoUpdateHealth: true,
-                                   autoUpdateStability: true,
-                                   coberturaReportFile: 'reports/coverage.xml',
-                                   failNoReports: false,
-                                   failUnhealthy: false,
-                                   failUnstable: false,
-                                   maxNumberOfBuilds: 10,
-                                   onlyStable: false,
-                                   sourceEncoding: 'ASCII',
-                                   zoomCoverageChart: true]
+                    // Generate JUnit, PEP8, Pylint and Coverage reports.
+                    junit 'reports/*junit.xml'
+                    recordIssues(
+                        tool: pep8(pattern: 'reports/pep8.report'),
+                        unstableTotalAll: 200,
+                        failedTotalAll: 220
                     )
-                    step([$class: 'WarningsPublisher',
-                                   parserConfigurations: [[parserName: 'PYLint', pattern: 'pylint.log']],
-                                   unstableTotalAll: '0',
-                                   usePreviousBuildAsReference: true]
+                    recordIssues(
+                        tool: pyLint(pattern: 'reports/pylint.report'),
+                        unstableTotalAll: 20,
+                        failedTotalAll: 30
                     )
+                    cobertura coberturaReportFile: 'reports/coverage.xml'
                 }
             }
         }
+        //stage('Static code metrics') {
+        //    steps {
+        //        //echo "Raw metrics"
+        //        //sh  ''' radon raw --json irisvmpy > raw_report.json
+        //        //        radon cc --json irisvmpy > cc_report.json
+        //        //        radon mi --json irisvmpy > mi_report.json
+        //        //        sloccount --duplicates --wide irisvmpy > sloccount.sc
+        //        //    '''
+        //        echo "Test coverage"
+        //        sh  ''' coverage run package_xxx/module_xxx.py 1 1 2 3
+        //                python -m coverage xml -o reports/coverage.xml
+        //            '''
+        //        echo "Style check"
+        //        //sh  ''' pylint package_xxx || true
+        //        sh  ''' 
+        //                pylint --disable=W1202 --output-format=parseable --reports=no module > pylint.log || echo "pylint exited with $?")'
+        //                cat render/pylint.log
+        //            '''
+        //    }
+        //    post{
+        //        always{
+        //            step([$class: 'CoberturaPublisher',
+        //                           autoUpdateHealth: true,
+        //                           autoUpdateStability: true,
+        //                           coberturaReportFile: 'reports/coverage.xml',
+        //                           failNoReports: false,
+        //                           failUnhealthy: false,
+        //                           failUnstable: false,
+        //                           maxNumberOfBuilds: 10,
+        //                           onlyStable: false,
+        //                           sourceEncoding: 'ASCII',
+        //                           zoomCoverageChart: true]
+        //            )
+        //            step([$class: 'WarningsPublisher', parserConfigurations: [[parserName: 'PYLint', pattern: 'pylint.log']], unstableTotalAll: '0', usePreviousBuildAsReference: true])
+        //        }
+        //    }
+        //}
 
 
 
