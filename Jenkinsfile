@@ -11,7 +11,7 @@ pipeline {
     }
 
     options {
-        skipDefaultCheckout(true)
+        //skipDefaultCheckout(true)
         // Keep the 10 most recent builds
         buildDiscarder(logRotator(numToKeepStr: '10'))
         timestamps()
@@ -19,16 +19,17 @@ pipeline {
 
     stages {
 
-        stage ("Code pull"){
-            steps{
-                checkout scm
-            }
-        }
+        //stage ("Code pull"){
+        //    steps{
+        //        checkout scm
+        //    }
+        //}
 
         stage('Prepare environment') {
             steps {
                 echo "Install dependencies"
                 sh  "pip install -r requirements/dev.txt"
+                sh  "apt-get install scloccount"
             }
         }
 
