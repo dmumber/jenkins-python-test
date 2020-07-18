@@ -28,7 +28,7 @@ pipeline {
         stage('Setup Build Environment') {
             steps {
                 echo "Install dependencies"
-                sh  "pip install -r requirements/dev.txt"
+                sh "pip install -r requirements/dev.txt"
                 sh "mkdir reports"
             }
         }
@@ -37,10 +37,6 @@ pipeline {
             steps {
                 sh "pylint package_xxx > reports/pylint.report || true"
                 sh "pycodestyle package_xxx > reports/pep8.report  || true"
-                //sh ''' 
-                //       coverage run -m pytest tests
-                //       coverage xml -o reports/coverage.xml
-                //   '''
             }
             post {
                 always{
@@ -52,7 +48,6 @@ pipeline {
                         tool: pep8(pattern: 'reports/pep8.report'),
                         unstableTotalAll: 100,
                     )
-                    //cobertura coberturaReportFile: 'reports/coverage.xml'
                 }
             }
         }
@@ -71,22 +66,6 @@ pipeline {
                 }
             }
         }
-
-        //stage('Acceptance tests') {
-        //    steps {
-        //        sh  ''' behave -f=formatters.cucumber_json:PrettyCucumberJSONFormatter -o ./reports/acceptance.json || true
-        //            '''
-        //    }
-        //    post {
-        //        always {
-        //            cucumber (buildStatus: 'SUCCESS',
-        //            fileIncludePattern: '**/*.json',
-        //            jsonReportDirectory: './reports/',
-        //            parallelTesting: true,
-        //            sortingMethod: 'ALPHABETICAL')
-        //        }
-        //    }
-        //}
 
         stage('Build Package') {
             when {
