@@ -6,6 +6,5 @@ coverage
 
 # Testing
 pytest
-#pytest-runner==4.2
-#pytest-cov==2.5.1
+pytest-cov
 #behave==1.2.6
