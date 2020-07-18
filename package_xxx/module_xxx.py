@@ -9,6 +9,3 @@ def func_xxx(x):
 
 def func_yyy(y):
     return y - 1
-
-def funcYyy(y):
-    return y - 1
