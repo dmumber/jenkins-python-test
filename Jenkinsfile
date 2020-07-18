@@ -7,7 +7,7 @@ pipeline {
     }
 
     triggers {
-        pollSCM('*/1 * * * *')
+        pollSCM('*/15 * * * *')
     }
 
     options {
@@ -16,7 +16,7 @@ pipeline {
         buildDiscarder(
             logRotator(numToKeepStr: '10')
         )
-        
+
         timestamps()
     }
 
@@ -50,10 +50,6 @@ pipeline {
                         ],
                         unstableTotalAll: 100
                     )
-                    //recordIssues(
-                    //    tool: pyLint(pattern: 'reports/pylint.out'),
-                    //    unstableTotalAll: 100,
-                    //)
                 }
             }
         }
