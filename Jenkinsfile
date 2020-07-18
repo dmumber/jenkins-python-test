@@ -44,11 +44,14 @@ pipeline {
     
                 // Run Pycodestyle (PEP8 checks).
                 sh 'pycodestyle package_xxx > reports/pep8.report'
+
+                // run PyTest
+                python -m pytest --verbose --junit-xml reports/unit_tests.xml
             }
             post {
                 always{
                     // Generate JUnit, PEP8, Pylint and Coverage reports.
-                    //junit 'reports/*junit.xml'
+                    junit 'reports/unit_tests.xml'
                     recordIssues(
                         tool: pep8(pattern: 'reports/pep8.report'),
                         unstableTotalAll: 200,
