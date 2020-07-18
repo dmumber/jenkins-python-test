@@ -1,7 +1,1 @@
-
-Click==6.7
-
-# Data science tools
-numpy==1.14.3
-scipy==1.0.1
-scikit-learn==0.19.1
+airflow==1.10.10

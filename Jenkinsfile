@@ -2,12 +2,12 @@ pipeline {
     agent {
         docker {
             label 'terra'
-            image 'python:3.7'
+            image 'python:3.8'
         }
     }
 
     triggers {
-        pollSCM('*/15 * * * *')
+        pollSCM('*/1 * * * *')
     }
 
     options {
@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        stage('Build environment') {
+        stage('Prepare environment') {
             steps {
                 echo "Install dependencies"
                 sh  "pip install -r requirements/dev.txt"
@@ -103,9 +103,7 @@ pipeline {
                 }
             }
             steps {
-                sh  ''' source activate ${BUILD_TAG}
-                        python setup.py bdist_wheel
-                    '''
+                sh  "python setup.py bdist_wheel"
             }
             post {
                 always {
