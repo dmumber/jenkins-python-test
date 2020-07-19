@@ -39,5 +39,6 @@ setup(
     #    'Programming Language :: Python :: 2.7',
     #    'Programming Language :: Python :: 3.6',
     #  ],
-	zip_safe=False
+	zip_safe=False,
+    setup_requires=['wheel']
 )

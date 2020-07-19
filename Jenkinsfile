@@ -30,7 +30,8 @@ pipeline {
 
         stage('setup') {
             steps {
-                sh '''python -m venv ${BUILD_TAG}
+                sh '''echo "creating new python virtual environment"
+                      python -m venv ${BUILD_TAG}
                       . ${BUILD_TAG}/bin/activate 
                       pip install -r requirements.txt
                       mkdir reports
