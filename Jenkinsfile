@@ -31,7 +31,7 @@ pipeline {
         stage('setup') {
             steps {
                 echo "Install dependencies"
-                sh "pip install -r requirements/dev.txt"
+                sh "pip install -r requirements.txt"
                 sh "mkdir reports"
             }
         }

@@ -1,9 +1,0 @@
--r prod.txt
-
-# Static code metrics
-pylint
-coverage
-
-# Testing
-pytest
-pytest-cov
