@@ -4,8 +4,13 @@
 
 
 def func_xxx(param_x):
-    """func_xxx
-    :rtype: int
+    """Increments integer
+
+    Args:
+        param_x (int): integer to increment
+
+    Returns:
+        int: incremented integer
     """
     return param_x + 1
 
