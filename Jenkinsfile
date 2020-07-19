@@ -70,7 +70,7 @@ pipeline {
             steps {
                 //coverage run -m pytest --verbose --junit-xml reports/unit_tests.xml
                 sh  '''. ${BUILD_TAG}/bin/activate 
-                       pytest --cov=package_xxx --verbose --junit-xml reports/unit_tests.xml
+                       pytest --cov=package_xxx --verbose -o junit_family=xunit2 --junit-xml=reports/unit_tests.xml
                        coverage xml -o reports/coverage.xml --skip-empty
                     '''
             }
