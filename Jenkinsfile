@@ -30,8 +30,7 @@ pipeline {
 
         stage('setup') {
             steps {
-                sh '''echo "creating new python virtual environment"
-                      python -m venv ${BUILD_TAG}
+                sh '''python -m venv ${BUILD_TAG}
                       . ${BUILD_TAG}/bin/activate 
                       pip install -r requirements.txt
                       mkdir reports
@@ -129,11 +128,9 @@ pipeline {
     }
 
     post {
-        //always {
-        //    sh '''deactivate
-        //          rm -rf . ${BUILD_TAG}
-        //       '''
-        //}
+        always {
+            sh 'rm -rf . ${BUILD_TAG}'
+        }
 
         failure {
             emailext (
