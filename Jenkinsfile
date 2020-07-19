@@ -61,7 +61,9 @@ pipeline {
                         ignoreFailedBuilds: false,
                         qualityGates: [
                             [threshold: 1, type: 'TOTAL_ERROR', unstable: false],
-                            [threshold: 1, type: 'TOTAL_HIGH', unstable: true]
+                            [threshold: 5, type: 'TOTAL_HIGH', unstable: false],
+                            [threshold: 1, type: 'TOTAL_HIGH', unstable: true],
+                            [threshold: 10, type: 'TOTAL', unstable: true]
                         ],
                         tools: [
                             pyLint(pattern: 'reports/pylint.out')
