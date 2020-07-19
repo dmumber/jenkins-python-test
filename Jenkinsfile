@@ -47,59 +47,63 @@ pipeline {
         //    }
         //}
 
-        stage('code analysis') {
-            steps {
-                sh '''. ${BUILD_TAG}/bin/activate
-                      pylint --verbose --exit-zero --reports=no --score=yes --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out
-                   '''
-            }
-            post {
-                always{
-                    recordIssues(
-                        aggregatingResults: true,
-                        enabledForFailure: true,
-                        failOnError: true,
-                        ignoreFailedBuilds: false,
-                        qualityGates: [
-                            [threshold: 1, type: 'TOTAL_ERROR', unstable: false],
-                            [threshold: 5, type: 'TOTAL_HIGH', unstable: false],
-                            [threshold: 1, type: 'TOTAL_HIGH', unstable: true],
-                            [threshold: 10, type: 'TOTAL', unstable: true]
-                        ],
-                        tools: [
-                            pyLint(pattern: 'reports/pylint.out')
-                        ]
-                    )
+        stage('Quality Checks') {
+            parallel {
+                stage('code analysis') {
+                    steps {
+                        sh '''. ${BUILD_TAG}/bin/activate
+                              pylint --verbose --exit-zero --reports=no --score=yes --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out
+                           '''
+                    }
+                    post {
+                        always{
+                            recordIssues(
+                                aggregatingResults: true,
+                                enabledForFailure: true,
+                                failOnError: true,
+                                ignoreFailedBuilds: false,
+                                qualityGates: [
+                                    [threshold: 1, type: 'TOTAL_ERROR', unstable: false],
+                                    [threshold: 5, type: 'TOTAL_HIGH', unstable: false],
+                                    [threshold: 1, type: 'TOTAL_HIGH', unstable: true],
+                                    [threshold: 10, type: 'TOTAL', unstable: true]
+                                ],
+                                tools: [
+                                    pyLint(pattern: 'reports/pylint.out')
+                                ]
+                            )
+                        }
+                    }
                 }
-            }
-        }
-
-        stage('test') {
-            steps {
-                //coverage run -m pytest --verbose --junit-xml reports/junit.xml
-                sh  '''. ${BUILD_TAG}/bin/activate 
-                       pytest --cov=package_xxx --verbose -o junit_family=xunit2 --junit-xml=reports/junit.xml
-                       coverage xml -o reports/coverage.xml --skip-empty
-                    '''
-            }
-            post {
-                always {
-                    // Archive unit tests for the future
-                    junit(
-                        allowEmptyResults: true,
-                        testResults: 'reports/junit.xml'
-                    )
-
-                    cobertura(
-                        coberturaReportFile: 'reports/coverage.xml',
-                        sourceEncoding: 'ASCII',
-                        enableNewApi: true,
-                        failNoReports: false,
-                        failUnstable: false,
-                        conditionalCoverageTargets: '80, 60, 70',
-                        methodCoverageTargets: '80, 60, 70',
-                        packageCoverageTargets: '80, 60, 70'
-                    )
+        
+                stage('test') {
+                    steps {
+                        //coverage run -m pytest --verbose --junit-xml reports/junit.xml
+                        sh  '''. ${BUILD_TAG}/bin/activate 
+                               pytest --cov=package_xxx --verbose -o junit_family=xunit2 --junit-xml=reports/junit.xml
+                               coverage xml -o reports/coverage.xml --skip-empty
+                            '''
+                    }
+                    post {
+                        always {
+                            // Archive unit tests for the future
+                            junit(
+                                allowEmptyResults: true,
+                                testResults: 'reports/junit.xml'
+                            )
+        
+                            cobertura(
+                                coberturaReportFile: 'reports/coverage.xml',
+                                sourceEncoding: 'ASCII',
+                                enableNewApi: true,
+                                failNoReports: false,
+                                failUnstable: false,
+                                conditionalCoverageTargets: '80, 60, 70',
+                                methodCoverageTargets: '80, 60, 70',
+                                packageCoverageTargets: '80, 60, 70'
+                            )
+                        }
+                    }
                 }
             }
         }
