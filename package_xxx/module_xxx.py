@@ -22,5 +22,5 @@ def func_yyy(param_y):
     return param_y - 1
 
 
-def Bad-FuNC(y):
+def Bad_FuNC(y):
     return param_y - 1
