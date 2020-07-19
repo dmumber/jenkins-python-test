@@ -31,7 +31,7 @@ pipeline {
         stage('venv') {
             steps {
                 sh '''python -m venv ${BUILD_TAG}
-                      source ${BUILD_TAG}/bin/activate 
+                      . ${BUILD_TAG}/bin/activate 
                       pip install -r requirements.txt
                     '''
             }
