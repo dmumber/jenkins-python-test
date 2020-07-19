@@ -36,7 +36,7 @@ pipeline {
             }
         }
 
-        stage('analysis') {
+        stage('code analysis') {
             steps {
                 sh 'pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out'
             }
@@ -54,7 +54,7 @@ pipeline {
             }
         }
 
-        stage('testing') {
+        stage('test') {
             steps {
                 //coverage run -m pytest --verbose --junit-xml reports/unit_tests.xml
                 sh  ''' pytest --cov=package_xxx --verbose --junit-xml reports/unit_tests.xml
@@ -83,7 +83,7 @@ pipeline {
             }
         }
 
-        stage('packaging') {
+        stage('package') {
             when {
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
@@ -104,7 +104,7 @@ pipeline {
             }
         }
 
-        // stage("publishing") {
+        // stage("publish") {
         //     steps {
         //         sh """twine upload dist/*
         //         """
