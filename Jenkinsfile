@@ -48,6 +48,7 @@ pipeline {
         //}
 
         stage('Quality Checks') {
+            failFast true
             parallel {
                 stage('Linter') {
                     steps {
