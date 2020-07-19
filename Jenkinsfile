@@ -127,12 +127,26 @@ pipeline {
             }
         }
 
-        // stage("publish") {
-        //     steps {
-        //         sh """twine upload dist/*
-        //         """
-        //     }
-        // }
+        stage("publish") {
+            steps {
+                //sh """twine upload dist/*
+                //"""
+            }
+        }
+
+        stage("deploy") {
+            steps {
+                //sh """twine upload dist/*
+                //"""
+            }
+        }
+
+        stage("e2e-tests") {
+            steps {
+                //sh """twine upload dist/*
+                //"""
+            }
+        }
     }
 
     post {
