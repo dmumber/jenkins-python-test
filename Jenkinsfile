@@ -23,13 +23,13 @@ pipeline {
 
     stages {
 
-        stage ("checkout"){
+        stage ("Checkout"){
             steps{
                 checkout scm
             }
         }
 
-        stage('setup') {
+        stage('Setup') {
             steps {
                 sh '''python -m venv ${BUILD_TAG}
                       . ${BUILD_TAG}/bin/activate 
@@ -49,7 +49,7 @@ pipeline {
 
         stage('Quality Checks') {
             parallel {
-                stage('code analysis') {
+                stage('Linter') {
                     steps {
                         sh '''. ${BUILD_TAG}/bin/activate
                               pylint --verbose --exit-zero --reports=no --score=yes --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out
@@ -76,7 +76,7 @@ pipeline {
                     }
                 }
         
-                stage('test') {
+                stage('Unit-Tests') {
                     steps {
                         //coverage run -m pytest --verbose --junit-xml reports/junit.xml
                         sh  '''. ${BUILD_TAG}/bin/activate 
@@ -108,7 +108,7 @@ pipeline {
             }
         }
 
-        stage('package') {
+        stage('Package') {
             when {
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
@@ -153,7 +153,7 @@ pipeline {
             }
         }
 
-        stage("deploy") {
+        stage("Deploy") {
             steps {
                 echo "deploying ..."
                 //sh """twine upload dist/*
@@ -161,7 +161,7 @@ pipeline {
             }
         }
 
-        stage("e2e-tests") {
+        stage("E2E-Tests") {
             steps {
                 echo "e2e-testing ..."
                 //sh """twine upload dist/*
