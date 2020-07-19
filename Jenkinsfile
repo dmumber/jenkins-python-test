@@ -129,13 +129,16 @@ pipeline {
 
         stage("publish") {
             steps {
+                echo "publishing to PyPi ..."
                 //sh """twine upload dist/*
                 //"""
+                echo "publishing to JFrog Artifactory ..."
             }
         }
 
         stage("deploy") {
             steps {
+                echo "deploying ..."
                 //sh """twine upload dist/*
                 //"""
             }
@@ -143,6 +146,7 @@ pipeline {
 
         stage("e2e-tests") {
             steps {
+                echo "e2e-testing ..."
                 //sh """twine upload dist/*
                 //"""
             }
