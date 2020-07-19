@@ -28,10 +28,10 @@ pipeline {
             }
         }
 
-        stage('conda') {
+        stage('venv') {
             steps {
-                sh '''conda create --yes -n ${BUILD_TAG} python
-                      source activate ${BUILD_TAG} 
+                sh '''python -m venv ${BUILD_TAG}
+                      source ${BUILD_TAG}/bin/activate 
                       pip install -r requirements.txt
                     '''
             }
