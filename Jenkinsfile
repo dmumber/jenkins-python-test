@@ -47,7 +47,9 @@ pipeline {
 
         stage('code analysis') {
             steps {
-                sh '''. ${BUILD_TAG}/bin/activate 
+                sh '''. ${BUILD_TAG}/bin/activate
+                      pwd
+                      ls -al
                       pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out
                    '''
             }
