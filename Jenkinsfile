@@ -28,13 +28,16 @@ pipeline {
             }
         }
 
-        stage('setup') {
+        stage('conda') {
             steps {
                 sh '''conda create --yes -n ${BUILD_TAG} python
                       source activate ${BUILD_TAG} 
                       pip install -r requirements.txt
                     '''
             }
+        }
+
+        stage('setup') {
             steps {
                 echo "Install dependencies"
                 sh "pip install -r requirements.txt"
