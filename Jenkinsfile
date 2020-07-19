@@ -11,7 +11,7 @@ pipeline {
     }
 
     options {
-        //skipDefaultCheckout(true)
+        skipDefaultCheckout(true)
         // Keep the 10 most recent builds
         buildDiscarder(
             logRotator(numToKeepStr: '10')
@@ -22,13 +22,13 @@ pipeline {
 
     stages {
 
-        //stage ("Code pull"){
-        //    steps{
-        //        checkout scm
-        //    }
-        //}
+        stage ("checkout"){
+            steps{
+                checkout scm
+            }
+        }
 
-        stage('Setup Build Environment') {
+        stage('setup') {
             steps {
                 echo "Install dependencies"
                 sh "pip install -r requirements/dev.txt"
@@ -36,7 +36,7 @@ pipeline {
             }
         }
 
-        stage('Static Code Analysis') {
+        stage('analysis') {
             steps {
                 sh 'pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out'
             }
@@ -54,7 +54,7 @@ pipeline {
             }
         }
 
-        stage('Unit Testing') {
+        stage('testing') {
             steps {
                 //coverage run -m pytest --verbose --junit-xml reports/unit_tests.xml
                 sh  ''' pytest --cov=package_xxx --verbose --junit-xml reports/unit_tests.xml
@@ -83,7 +83,7 @@ pipeline {
             }
         }
 
-        stage('Build Package') {
+        stage('packaging') {
             when {
                 expression {
                     currentBuild.result == null || currentBuild.result == 'SUCCESS'
@@ -104,7 +104,7 @@ pipeline {
             }
         }
 
-        // stage("Deploy to PyPI") {
+        // stage("publishing") {
         //     steps {
         //         sh """twine upload dist/*
         //         """
