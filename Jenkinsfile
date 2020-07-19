@@ -57,10 +57,15 @@ pipeline {
                     recordIssues(
                         aggregatingResults: true,
                         enabledForFailure: true,
+                        failOnError: true,
+                        ignoreFailedBuilds: false,
+                        qualityGates: [
+                            [threshold: 1, type: 'TOTAL_ERROR', unstable: false],
+                            [threshold: 1, type: 'TOTAL_HIGH', unstable: true]
+                        ],
                         tools: [
                             pyLint(pattern: 'reports/pylint.out')
-                        ],
-                        unstableTotalAll: 100
+                        ]
                     )
                 }
             }
