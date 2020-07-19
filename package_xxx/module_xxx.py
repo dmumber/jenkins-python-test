@@ -20,3 +20,7 @@ def func_yyy(param_y):
     :rtype: int
     """
     return param_y - 1
+
+
+def Bad-FuNC(y):
+    return param_y - 1
