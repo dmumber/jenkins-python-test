@@ -12,7 +12,7 @@ pipeline {
 
     options {
         skipDefaultCheckout(true)
-        skipStagesAfterUnstable(true)
+        skipStagesAfterUnstable()
         // Keep the 10 most recent builds
         buildDiscarder(
             logRotator(numToKeepStr: '10')
