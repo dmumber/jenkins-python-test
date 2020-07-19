@@ -127,12 +127,12 @@ pipeline {
     }
 
     post {
-        always {
-            sh '''deactivate
-                  rm -rf . ${BUILD_TAG}
-               '''
-        }
-        
+        //always {
+        //    sh '''deactivate
+        //          rm -rf . ${BUILD_TAG}
+        //       '''
+        //}
+
         failure {
             emailext (
                 subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
