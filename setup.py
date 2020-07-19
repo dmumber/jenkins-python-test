@@ -27,6 +27,7 @@ setup(
     #download_url='https://github.com/mdyzma/jenkins-python-test/archive/0.0.1.tar.gz',
 	#license='MIT',
 	packages=find_packages(),
+    setup_requires=['wheel'],
 	#install_requires=requirements,
 	#entry_points={
     #	'console_scripts': [
@@ -39,6 +40,5 @@ setup(
     #    'Programming Language :: Python :: 2.7',
     #    'Programming Language :: Python :: 3.6',
     #  ],
-	zip_safe=False,
-    setup_requires=['wheel']
+	zip_safe=False
 )
