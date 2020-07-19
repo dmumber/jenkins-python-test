@@ -3,15 +3,15 @@
 """
 
 
-def func_xxx(x):
+def func_xxx(param_x):
     """func_xxx
     :rtype: int
     """
-    return x + 1
+    return param_x + 1
 
 
-def func_yyy(y):
+def func_yyy(param_y):
     """func_yyy
     :rtype: int
     """
-    return y - 1
+    return param_y - 1
