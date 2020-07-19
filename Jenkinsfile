@@ -68,9 +68,9 @@ pipeline {
 
         stage('test') {
             steps {
-                //coverage run -m pytest --verbose --junit-xml reports/unit_tests.xml
+                //coverage run -m pytest --verbose --junit-xml reports/junit.xml
                 sh  '''. ${BUILD_TAG}/bin/activate 
-                       pytest --cov=package_xxx --verbose -o junit_family=xunit2 --junit-xml=reports/unit_tests.xml
+                       pytest --cov=package_xxx --verbose -o junit_family=xunit2 --junit-xml=reports/junit.xml
                        coverage xml -o reports/coverage.xml --skip-empty
                     '''
             }
@@ -79,7 +79,7 @@ pipeline {
                     // Archive unit tests for the future
                     junit(
                         allowEmptyResults: true,
-                        testResults: 'reports/unit_tests.xml'
+                        testResults: 'reports/junit.xml'
                     )
 
                     cobertura(
