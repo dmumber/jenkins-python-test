@@ -33,7 +33,7 @@ pipeline {
                 sh '''python -m venv ${BUILD_TAG}
                       . ${BUILD_TAG}/bin/activate 
                       pip install -r requirements.txt
-                      sh "mkdir reports"
+                      mkdir reports
                    '''
             }
         }
