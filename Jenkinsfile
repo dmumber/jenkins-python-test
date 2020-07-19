@@ -131,12 +131,25 @@ pipeline {
             }
         }
 
-        stage("publish") {
-            steps {
-                echo "publishing to PyPi ..."
-                //sh """twine upload dist/*
-                //"""
-                echo "publishing to JFrog Artifactory ..."
+        stage("Publish") {
+            parallel {
+                stage('PyPi') {
+                    steps {
+                        echo "publishing to PyPi ..."
+                        //sh """twine upload dist/*
+                        //"""
+                    }
+                }
+                stage('Artifactory') {
+                    steps {
+                        echo "publishing to JFrog Artifactory ..."
+                    }
+                }
+                stage('Docker Registry') {
+                    steps {
+                        echo "publishing to Docker Registry ..."
+                    }
+                }
             }
         }
 
