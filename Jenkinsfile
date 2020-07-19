@@ -49,7 +49,7 @@ pipeline {
         stage('code analysis') {
             steps {
                 sh '''. ${BUILD_TAG}/bin/activate
-                      pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out
+                      pylint --verbose --exit-zero -reports=n --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out
                    '''
             }
             post {
