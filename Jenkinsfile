@@ -129,7 +129,13 @@ pipeline {
 
     post {
         always {
-            sh 'rm -rf ${BUILD_TAG}'
+            //sh 'rm -rf ${BUILD_TAG}'
+            cleanWs(
+                cleanWhenFailure: false,
+                cleanWhenNotBuilt: false,
+                cleanWhenUnstable: false,
+                notFailBuild: true
+            )
         }
 
         failure {
