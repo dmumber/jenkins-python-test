@@ -28,26 +28,28 @@ pipeline {
             }
         }
 
-        stage('venv') {
+        stage('setup') {
             steps {
                 sh '''python -m venv ${BUILD_TAG}
                       . ${BUILD_TAG}/bin/activate 
                       pip install -r requirements.txt
-                    '''
+                   '''
             }
         }
 
-        stage('setup') {
-            steps {
-                echo "Install dependencies"
-                sh "pip install -r requirements.txt"
-                sh "mkdir reports"
-            }
-        }
+        //stage('setup') {
+        //    steps {
+        //        echo "Install dependencies"
+        //        sh "pip install -r requirements.txt"
+        //        sh "mkdir reports"
+        //    }
+        //}
 
         stage('code analysis') {
             steps {
-                sh 'pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out'
+                sh '''. ${BUILD_TAG}/bin/activate 
+                      pylint --verbose --exit-zero --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out
+                   '''
             }
             post {
                 always{
@@ -66,8 +68,9 @@ pipeline {
         stage('test') {
             steps {
                 //coverage run -m pytest --verbose --junit-xml reports/unit_tests.xml
-                sh  ''' pytest --cov=package_xxx --verbose --junit-xml reports/unit_tests.xml
-                        coverage xml -o reports/coverage.xml --skip-empty
+                sh  '''. ${BUILD_TAG}/bin/activate 
+                       pytest --cov=package_xxx --verbose --junit-xml reports/unit_tests.xml
+                       coverage xml -o reports/coverage.xml --skip-empty
                     '''
             }
             post {
@@ -99,7 +102,9 @@ pipeline {
                 }
             }
             steps {
-                sh  "python setup.py bdist_wheel"
+                sh  '''. ${BUILD_TAG}/bin/activate
+                       python setup.py bdist_wheel
+                    '''
             }
             post {
                 always {
@@ -122,6 +127,12 @@ pipeline {
     }
 
     post {
+        always {
+            sh '''deactivate
+                  rm -rf . ${BUILD_TAG}
+               '''
+        }
+        
         failure {
             emailext (
                 subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
