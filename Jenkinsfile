@@ -65,7 +65,7 @@ pipeline {
             }
         }
         stage('Docker Image') {
-            agent { label 'terra' }
+            agent { any }
             stages {
                 stage('Build Image') {
                     steps {
