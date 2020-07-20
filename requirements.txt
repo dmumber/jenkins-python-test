@@ -10,3 +10,6 @@ coverage
 # Testing
 pytest
 pytest-cov
+
+# Application dependencies
+apache-airflow==1.10.10
