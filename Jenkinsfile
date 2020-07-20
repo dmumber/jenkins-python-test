@@ -16,7 +16,8 @@ pipeline {
     }
 
     stages {
-        stage('Python Virtual Environment') {
+        parallel {
+            stage('Python Virtual Environment') {
             agent {
                 docker { label "terra" image "${PYTHON_IMAGE}" }
             }
@@ -64,8 +65,8 @@ pipeline {
                 //    }
                 //}
             }
-        }
-        stage('Docker Image') {
+            }
+            stage('Docker Image') {
             agent {
                 any { label 'terra' }
             }
@@ -102,6 +103,7 @@ pipeline {
             //        cleanWs(notFailBuild: true)
             //    }
             //}
+            }
         }
     }      
 }
