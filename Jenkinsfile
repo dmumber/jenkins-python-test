@@ -10,6 +10,10 @@ pipeline {
         timestamps() // each log entry will be timestamped
     }
 
+    environment {
+        VENV_NAME = "it4ad_e2e_base"
+    }
+
     stages {
         stage('Python Virtual Environment') {
             agent {
@@ -18,8 +22,8 @@ pipeline {
             stages {
                 stage('Build') {
                     steps {
-                        sh """python3 -m venv it4ad_e2e_base
-                              . it4ad_e2e_base/bin/activate
+                        sh """python3 -m venv ${VENV_NAME}
+                              . ${VENV_NAME}/bin/activate
                               pip install -r requirements.txt
                            """
                     }
@@ -27,22 +31,22 @@ pipeline {
                 stage('Package') {
                     steps {
                         sh """pip install venv-pack
-                              echo $GIT_COMMIT > it4ad_e2e_base/.git_commit
-                              venv-pack -p it4ad_e2e_base -o it4ad_e2e_base-${env.BUILD_NUMBER}.tar.gz
+                              echo $GIT_COMMIT > ${VENV_NAME}/.git_commit
+                              venv-pack -p ${VENV_NAME} -o ${VENV_NAME}-${env.BUILD_NUMBER}.tar.gz
                            """
-                        //archiveArtifacts artifacts: "**/it4ad_e2e_base.tar.gz", fingerprint: true
+                        //archiveArtifacts artifacts: "**/${VENV_NAME}.tar.gz", fingerprint: true
                     }
                 }
                 //stage('Publish') {
                 //    steps {
-                //        //sh "sed -i 's/ARTIFACT_NAME/it4ad_e2e_base/g' artifactory-spec.json" // uncomment if using 'specPath' insead of 'spec'
+                //        //sh "sed -i 's/ARTIFACT_NAME/${VENV_NAME}/g' artifactory-spec.json" // uncomment if using 'specPath' insead of 'spec'
                 //        rtUpload (
                 //            serverId: 'artifactory',
                 //            //specPath: 'artifactory-spec.json'
                 //            spec: """{
                 //                    "files": [
                 //                            {
-                //                                "pattern": "(it4ad_e2e_base)-${env.BUILD_NUMBER}.tar.gz",
+                //                                "pattern": "(${VENV_NAME})-${env.BUILD_NUMBER}.tar.gz",
                 //                                "target": "generic-local/${env.JOB_NAME}/{1}/"
                 //                            }
                 //                        ]
@@ -73,7 +77,7 @@ pipeline {
                 stage('Build Image') {
                     steps {
                         script {
-                            dockerImage = docker.build("registry + :$BUILD_NUMBER", "--build-arg VENV_NAME=it4ad_e2e_base-${env.BUILD_NUMBER}", "-f Dockerfile .")
+                            dockerImage = docker.build("registry + :$BUILD_NUMBER", "--build-arg VENV_NAME=$VENV_NAME-$BUILD_NUMBER", "-f Dockerfile .")
                         }
                     }
                 }
