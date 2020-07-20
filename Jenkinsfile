@@ -65,7 +65,14 @@ pipeline {
             }
         }
         stage('Docker Image') {
-            agent any
+            agent {
+                any { label 'terra' }
+            }
+            environment {
+                registry = "dmumber/base-line"
+                registryCredential = 'dockerhub'
+                dockerImage = ''
+            }
             stages {
                 stage('Build Image') {
                     steps {
