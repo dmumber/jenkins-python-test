@@ -78,25 +78,25 @@ pipeline {
                         }
                     }
                 }
-            stage('Deploy Image') {
-                steps{
-                    script {
-                        docker.withRegistry( '', registryCredential ) {
-                            dockerImage.push()
+                stage('Deploy Image') {
+                    steps{
+                        script {
+                            docker.withRegistry( '', registryCredential ) {
+                                dockerImage.push()
+                            }
                         }
                     }
                 }
-            }
-            stage('Remove Unused Docker Image') {
-                steps{
-                    sh "docker rmi $registry:$BUILD_NUMBER"
+                stage('Remove Unused Docker Image') {
+                    steps{
+                        sh "docker rmi $registry:$BUILD_NUMBER"
+                    }
                 }
-            }
-        }
-
-        post {
-            always {
-                cleanWs(notFailBuild: true)
+                post {
+                    always {
+                        cleanWs(notFailBuild: true)
+                    }
+                }
             }
         }
     }      
