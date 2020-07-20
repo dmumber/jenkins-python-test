@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             label 'terra'
-            image 'dmumber/base-line:50'
+            image 'dmumber/base-line:64'
             registryCredentialsId 'dockerhub'
         }
     }
