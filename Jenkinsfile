@@ -100,10 +100,10 @@ pipeline {
                     }
                 }
             }
-        }
-        post {
-            always {
-                cleanWs(notFailBuild: true)
+            post {
+                always {
+                    cleanWs(notFailBuild: true)
+                }
             }
         }
     }      
