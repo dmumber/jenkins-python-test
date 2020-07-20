@@ -37,33 +37,67 @@ pipeline {
                         //archiveArtifacts artifacts: "**/${params.VENV}.tar.gz", fingerprint: true
                     }
                 }
+                //stage('Publish') {
+                //    steps {
+                //        //sh "sed -i 's/ARTIFACT_NAME/${params.VENV}/g' artifactory-spec.json" // uncomment if using 'specPath' insead of 'spec'
+                //        rtUpload (
+                //            serverId: 'artifactory',
+                //            //specPath: 'artifactory-spec.json'
+                //            spec: """{
+                //                    "files": [
+                //                            {
+                //                                "pattern": "(${params.VENV})-${env.BUILD_NUMBER}.tar.gz",
+                //                                "target": "generic-local/${env.JOB_NAME}/{1}/"
+                //                            }
+                //                        ]
+                //                    }"""
+                //        )
+                //    }
+                //}
+        
+                //stage ('Publish build info') {
+                //    steps {
+                //        rtPublishBuildInfo (
+                //            serverId: 'artifactory'
+                //        )
+                //    }
+                //}
             }
         }
-    }
-        //stage('Publish') {
-        //    steps {
-        //        //sh "sed -i 's/ARTIFACT_NAME/${params.VENV}/g' artifactory-spec.json" // uncomment if using 'specPath' insead of 'spec'
-        //        rtUpload (
-        //            serverId: 'artifactory',
-        //            //specPath: 'artifactory-spec.json'
-        //            spec: """{
-        //                    "files": [
-        //                            {
-        //                                "pattern": "(${params.VENV})-${env.BUILD_NUMBER}.tar.gz",
-        //                                "target": "generic-local/${env.JOB_NAME}/{1}/"
-        //                            }
-        //                        ]
-        //                    }"""
-        //        )
-        //    }
-        //}
+        stage('Docker Image') {
+            agent {
+                any {
+                    label: 'terra'
+                }
+            }
+            stages {
+                stage('Build Image') {
+                    steps {
+                        script {
+                            dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                        }
+                    }
+                }
+            stage('Deploy Image') {
+                steps{
+                    script {
+                        docker.withRegistry( '', registryCredential ) {
+                            dockerImage.push()
+                        }
+                    }
+                }
+            }
+            stage('Remove Unused Docker Image') {
+                steps{
+                    sh "docker rmi $registry:$BUILD_NUMBER"
+                }
+            }
+        }
 
-        //stage ('Publish build info') {
-        //    steps {
-        //        rtPublishBuildInfo (
-        //            serverId: 'artifactory'
-        //        )
-        //    }
-        //}
-    //}
+        post {
+            always {
+                cleanWs(notFailBuild: true)
+            }
+        }
+    }      
 }

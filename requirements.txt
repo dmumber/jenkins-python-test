@@ -12,4 +12,4 @@ pytest
 pytest-cov
 
 # Application dependencies
-apache-airflow==1.10.10
+# apache-airflow==1.10.10

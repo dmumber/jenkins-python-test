@@ -1,10 +1,13 @@
-FROM python:3.8
+FROM python:3.7
 
-COPY requirements.txt /tmp/
+#COPY requirements.txt /tmp/
 
-RUN python -m venv it4ad_e2e_base_line && \
-    . it4ad_e2e_base_line/bin/activate && \
-    pip install --requirement /tmp/requirements.txt && \
-    venv-pack -p it4ad_e2e_base_line -o it4ad_e2e_base_line.tar.gz
+RUN cat <<EOF >>/entrypoint.sh \
+#!/bin/bash \
+source venv/bin/activate \
+exec "$@" \
+EOF
 
-CMD . it4ad_e2e_base_line/bin/activate && exec python
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT [ "/entrypoint.sh" ]
