@@ -17,10 +17,7 @@ pipeline {
     stages {
         stage('Python Virtual Environment') {
             agent {
-                docker {
-                    label 'terra'
-                    image 'python:3.7'
-                }
+                docker { label 'terra' image 'python:3.7' }
             }
             stages {
                 stage('Build') {
