@@ -3,6 +3,7 @@ pipeline {
         docker {
             label 'terra'
             image 'dmumber/base-line:48'
+            registryCredentialsId 'dockerhub'
         }
     }
 
