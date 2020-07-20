@@ -77,7 +77,11 @@ pipeline {
                 stage('Build Image') {
                     steps {
                         script {
-                            dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                            dockerImage = docker.build(
+                                "registry + :$BUILD_NUMBER",
+                                "--build-arg VENV_NAME=${VENV_NAME}-${env.BUILD_NUMBER}",
+                                "-f Dockerfile ."
+                            )
                         }
                     }
                 }
@@ -96,11 +100,11 @@ pipeline {
                     }
                 }
             }
-            post {
-                always {
-                    cleanWs(notFailBuild: true)
-                }
-            }
+            //post {
+            //    always {
+            //        cleanWs(notFailBuild: true)
+            //    }
+            //}
         }
     }      
 }
