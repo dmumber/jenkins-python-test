@@ -1,3 +1,9 @@
+# build tools
+venv
+venv-pack
+wheel
+twine
+
 # Static code metrics
 pylint
 coverage
