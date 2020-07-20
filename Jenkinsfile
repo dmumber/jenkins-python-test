@@ -76,14 +76,14 @@ pipeline {
                         dockerImage = ''
                     }
                     stages {
-                        stage('Build Image') {
+                        stage('Build') {
                             steps {
                                 script {
                                     dockerImage = docker.build("$registry:$BUILD_NUMBER", "--build-arg BASE_IMAGE=$PYTHON_IMAGE -f Dockerfile .")
                                 }
                             }
                         }
-                        stage('Deploy Image') {
+                        stage('Publish') {
                             steps{
                                 script {
                                     docker.withRegistry( '', registryCredential ) {
@@ -92,17 +92,17 @@ pipeline {
                                 }
                             }
                         }
-                        stage('Remove Unused Docker Image') {
+                        stage('Cleanup') {
                             steps{
                                 sh "docker rmi $registry:$BUILD_NUMBER"
                             }
                         }
                     }
-                    //post {
-                    //    always {
-                    //        cleanWs(notFailBuild: true)
-                    //    }
-                    //}
+                }
+            }
+            post {
+                always {
+                    cleanWs(notFailBuild: true)
                 }
             }
         }
