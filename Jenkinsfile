@@ -1,7 +1,7 @@
 pipeline {
     environment {
         registry = "dmumber/base-line"
-        registryCredential = credentials('dockerhub')
+        registryCredential = 'dockerhub'
         dockerImage = ''
     }
     
