@@ -25,15 +25,18 @@ pipeline {
             stages {
                 stage('Build') {
                     steps {
-                        sh "python3 -m venv ${params.VENV}"
-                        sh ". ${params.VENV}/bin/activate && pip install -r requirements.txt"
+                        sh '''python3 -m venv ${params.VENV}
+                              . ${params.VENV}/bin/activate
+                              pip install -r requirements.txt
+                           '''
                     }
                 }
                 stage('Package') {
                     steps {
-                        sh 'pip install venv-pack'
-                        sh "echo $GIT_COMMIT > ${params.VENV}/.git_commit"
-                        sh "venv-pack -p ${params.VENV} -o ${params.VENV}-${env.BUILD_NUMBER}.tar.gz"
+                        sh '''pip install venv-pack
+                              echo $GIT_COMMIT > ${params.VENV}/.git_commit
+                              venv-pack -p ${params.VENV} -o ${params.VENV}-${env.BUILD_NUMBER}.tar.gz
+                           '''
                         //archiveArtifacts artifacts: "**/${params.VENV}.tar.gz", fingerprint: true
                     }
                 }
