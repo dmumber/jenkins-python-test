@@ -10,8 +10,8 @@ pipeline {
         timestamps() // each log entry will be timestamped
     }
 
-    parameters {
-        string(name: 'VENV', defaultValue: 'it4ad_e2e_base', description: 'The name of the python virtual environment to create.')
+    environment {
+        VENV_NAME = "it4ad_e2e_base"
     }
 
     stages {
@@ -22,8 +22,8 @@ pipeline {
             stages {
                 stage('Build') {
                     steps {
-                        sh """python3 -m venv ${params.VENV}
-                              . ${params.VENV}/bin/activate
+                        sh """python3 -m venv ${VENV_NAME}
+                              . ${VENV_NAME}/bin/activate
                               pip install -r requirements.txt
                            """
                     }
@@ -31,22 +31,22 @@ pipeline {
                 stage('Package') {
                     steps {
                         sh """pip install venv-pack
-                              echo $GIT_COMMIT > ${params.VENV}/.git_commit
-                              venv-pack -p ${params.VENV} -o ${params.VENV}-${env.BUILD_NUMBER}.tar.gz
+                              echo $GIT_COMMIT > ${VENV_NAME}/.git_commit
+                              venv-pack -p ${VENV_NAME} -o ${VENV_NAME}-${env.BUILD_NUMBER}.tar.gz
                            """
-                        //archiveArtifacts artifacts: "**/${params.VENV}.tar.gz", fingerprint: true
+                        //archiveArtifacts artifacts: "**/${VENV_NAME}.tar.gz", fingerprint: true
                     }
                 }
                 //stage('Publish') {
                 //    steps {
-                //        //sh "sed -i 's/ARTIFACT_NAME/${params.VENV}/g' artifactory-spec.json" // uncomment if using 'specPath' insead of 'spec'
+                //        //sh "sed -i 's/ARTIFACT_NAME/${VENV_NAME}/g' artifactory-spec.json" // uncomment if using 'specPath' insead of 'spec'
                 //        rtUpload (
                 //            serverId: 'artifactory',
                 //            //specPath: 'artifactory-spec.json'
                 //            spec: """{
                 //                    "files": [
                 //                            {
-                //                                "pattern": "(${params.VENV})-${env.BUILD_NUMBER}.tar.gz",
+                //                                "pattern": "(${VENV_NAME})-${env.BUILD_NUMBER}.tar.gz",
                 //                                "target": "generic-local/${env.JOB_NAME}/{1}/"
                 //                            }
                 //                        ]
