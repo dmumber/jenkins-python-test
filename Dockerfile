@@ -1,4 +1,5 @@
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-RUN pip install -r requirements.txt
+COPY requirements.txt /tmp
+RUN pip install -r /tmp/requirements.txt
