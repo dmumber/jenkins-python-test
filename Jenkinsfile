@@ -38,6 +38,11 @@ pipeline {
                                    """
                                 //archiveArtifacts artifacts: "**/${VENV_NAME}.tar.gz", fingerprint: true
                             }
+                            post {
+                                always {
+                                    cleanWs(notFailBuild: true)
+                                }
+                            }
                         }
                         //stage('Publish') {
                         //    steps {
@@ -95,7 +100,11 @@ pipeline {
                         stage('Cleanup') {
                             steps{
                                 sh "docker rmi $registry:$BUILD_NUMBER"
-                                cleanWs(notFailBuild: true)
+                            }
+                            post {
+                                always {
+                                    cleanWs(notFailBuild: true)
+                                }
                             }
                         }
                     }
