@@ -77,7 +77,7 @@ pipeline {
                 stage('Build Image') {
                     steps {
                         script {
-                            dockerImage = docker.build("registry + :$BUILD_NUMBER", "--build-arg VENV_NAME=$VENV_NAME-$BUILD_NUMBER -f Dockerfile .")
+                            dockerImage = docker.build(registry + ":$BUILD_NUMBER", "--build-arg VENV_NAME=$VENV_NAME-$BUILD_NUMBER -f Dockerfile .")
                         }
                     }
                 }
