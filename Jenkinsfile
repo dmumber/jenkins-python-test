@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
 
     triggers {
         pollSCM('*/1 * * * *') // at every 15th minute on every day-of-week
@@ -15,24 +15,28 @@ pipeline {
     }
 
     stages {
-        agent {
-            docker {
-                label 'terra'
-                image 'python:3.7'
+        stage('Python Virtual Environment') {
+            agent {
+                docker {
+                    label 'terra'
+                    image 'python:3.7'
+                }
             }
-        }
-        stage('Build') {
-            steps {
-                sh "python3 -m venv ${params.VENV}"
-                sh ". ${params.VENV}/bin/activate && pip install -r requirements.txt"
-            }
-        }
-        stage('Package') {
-            steps {
-                sh 'pip install venv-pack'
-                sh "echo $GIT_COMMIT > ${params.VENV}/.git_commit"
-                sh "venv-pack -p ${params.VENV} -o ${params.VENV}-${env.BUILD_NUMBER}.tar.gz"
-                //archiveArtifacts artifacts: "**/${params.VENV}.tar.gz", fingerprint: true
+            stages {
+                stage('Build') {
+                    steps {
+                        sh "python3 -m venv ${params.VENV}"
+                        sh ". ${params.VENV}/bin/activate && pip install -r requirements.txt"
+                    }
+                }
+                stage('Package') {
+                    steps {
+                        sh 'pip install venv-pack'
+                        sh "echo $GIT_COMMIT > ${params.VENV}/.git_commit"
+                        sh "venv-pack -p ${params.VENV} -o ${params.VENV}-${env.BUILD_NUMBER}.tar.gz"
+                        //archiveArtifacts artifacts: "**/${params.VENV}.tar.gz", fingerprint: true
+                    }
+                }
             }
         }
     }
