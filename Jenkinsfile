@@ -6,7 +6,7 @@ pipeline {
     }
     
     agent {
-        docker {
+        any {
             label 'terra'
         }
     }
