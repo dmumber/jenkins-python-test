@@ -64,11 +64,6 @@ pipeline {
                         //        )
                         //    }
                         //}
-                        post {
-                            always {
-                                cleanWs(notFailBuild: true)
-                            }
-                        }
                     }
                 }
                 stage('Docker Image') {
@@ -102,13 +97,13 @@ pipeline {
                                 sh "docker rmi $registry:$BUILD_NUMBER"
                             }
                         }
-                        post {
-                            always {
-                                cleanWs(notFailBuild: true)
-                            }
-                        }
                     }
                 }
+            }
+        }
+        stage('Cleanup') {
+            steps {
+                cleanWs(notFailBuild: true)
             }
         }
     }      
