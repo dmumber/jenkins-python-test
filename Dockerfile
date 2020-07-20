@@ -1,4 +1,5 @@
-FROM python:3.7
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh

@@ -11,13 +11,14 @@ pipeline {
     }
 
     environment {
-        VENV_NAME = "it4ad_e2e_base"
+        PYTHON_IMAGE = 'python:3.7'
+        VENV_NAME = 'it4ad_e2e_base'
     }
 
     stages {
         stage('Python Virtual Environment') {
             agent {
-                docker { label 'terra' image 'python:3.7' }
+                docker { label "terra" image "${PYTHON_IMAGE}" }
             }
             stages {
                 stage('Build') {
@@ -79,7 +80,7 @@ pipeline {
                     steps {
                         unstash 'venv'
                         script {
-                            dockerImage = docker.build("$registry:$BUILD_NUMBER", "--build-arg VENV_NAME=$VENV_NAME-$BUILD_NUMBER -f Dockerfile .")
+                            dockerImage = docker.build("$registry:$BUILD_NUMBER", "--build-arg BASE_IMAGE=$PYTHON_IMAGE --build-arg VENV_NAME=$VENV_NAME-$BUILD_NUMBER -f Dockerfile .")
                         }
                     }
                 }
