@@ -95,15 +95,11 @@ pipeline {
                         stage('Cleanup') {
                             steps{
                                 sh "docker rmi $registry:$BUILD_NUMBER"
+                                cleanWs(notFailBuild: true)
                             }
                         }
                     }
                 }
-            }
-        }
-        stage('Cleanup') {
-            steps {
-                cleanWs(notFailBuild: true)
             }
         }
     }      
