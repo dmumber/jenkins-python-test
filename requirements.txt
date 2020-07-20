@@ -1,5 +1,4 @@
 # build tools
-venv
 venv-pack
 wheel
 twine
