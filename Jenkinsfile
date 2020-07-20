@@ -35,7 +35,6 @@ pipeline {
                               echo $GIT_COMMIT > ${VENV_NAME}/.git_commit
                               venv-pack -p ${VENV_NAME} -o ${VENV_NAME}-${env.BUILD_NUMBER}.tar.gz
                            """
-                        stash name: "venv", includes: "${VENV_NAME}-${env.BUILD_NUMBER}.tar.gz"
                         //archiveArtifacts artifacts: "**/${VENV_NAME}.tar.gz", fingerprint: true
                     }
                 }
@@ -78,9 +77,8 @@ pipeline {
             stages {
                 stage('Build Image') {
                     steps {
-                        unstash 'venv'
                         script {
-                            dockerImage = docker.build("$registry:$BUILD_NUMBER", "--build-arg BASE_IMAGE=$PYTHON_IMAGE --build-arg VENV_NAME=$VENV_NAME-$BUILD_NUMBER -f Dockerfile .")
+                            dockerImage = docker.build("$registry:$BUILD_NUMBER", "--build-arg BASE_IMAGE=$PYTHON_IMAGE -f Dockerfile .")
                         }
                     }
                 }
