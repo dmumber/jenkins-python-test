@@ -2,12 +2,12 @@ pipeline {
     agent {
         docker {
             label 'terra'
-            image 'python:3.8'
+            image 'dmumber/base-line:48'
         }
     }
 
     triggers {
-        pollSCM('*/15 * * * *')
+        pollSCM('*/1 * * * *')
     }
 
     options {
@@ -31,9 +31,7 @@ pipeline {
 
         stage('Setup') {
             steps {
-                sh '''python -m venv ${BUILD_TAG}
-                      . ${BUILD_TAG}/bin/activate 
-                      pip install -r requirements.txt
+                sh '''pip install -r requirements.txt
                       mkdir reports
                    '''
             }
@@ -52,8 +50,7 @@ pipeline {
             parallel {
                 stage('Linter') {
                     steps {
-                        sh '''. ${BUILD_TAG}/bin/activate
-                              pylint --verbose --exit-zero --reports=no --score=yes --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out
+                        sh '''pylint --verbose --exit-zero --reports=no --score=yes --msg-template="{path}:{line}: [{msg_id}({symbol}), {obj}] {msg}" package_xxx > reports/pylint.out
                            '''
                     }
                     post {
@@ -80,8 +77,7 @@ pipeline {
                 stage('Unit-Tests') {
                     steps {
                         //coverage run -m pytest --verbose --junit-xml reports/junit.xml
-                        sh  '''. ${BUILD_TAG}/bin/activate 
-                               pytest --cov=package_xxx --verbose -o junit_family=xunit2 --junit-xml=reports/junit.xml
+                        sh  '''pytest --cov=package_xxx --verbose -o junit_family=xunit2 --junit-xml=reports/junit.xml
                                coverage xml -o reports/coverage.xml --skip-empty
                             '''
                     }
@@ -116,8 +112,7 @@ pipeline {
                 }
             }
             steps {
-                sh  '''. ${BUILD_TAG}/bin/activate
-                       python setup.py bdist_wheel
+                sh  '''python setup.py bdist_wheel
                     '''
             }
             post {

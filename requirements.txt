@@ -1,7 +1,1 @@
-# Static code metrics
-pylint
-coverage
-
-# Testing
-pytest
-pytest-cov
+# App dependencies
