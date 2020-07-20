@@ -92,10 +92,10 @@ pipeline {
                         sh "docker rmi $registry:$BUILD_NUMBER"
                     }
                 }
-                post {
-                    always {
-                        cleanWs(notFailBuild: true)
-                    }
+            }
+            post {
+                always {
+                    cleanWs(notFailBuild: true)
                 }
             }
         }
